@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}
+    New question
+{% endblock %}
+
+{% block body %}
+<form class="text-font">
+    <div class="form-group">
+        <label for="inputTitle">Title</label>
+        <input type="text" class="form-control" id="inputTitle"
+               placeholder="Enter title">
+    </div>
+    <div class="form-group">
+        <label for="inputText">Text</label>
+        <textarea class="form-control text-area" id="inputText" placeholder="Enter your question"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="inputTags">Tags</label>
+        <input type="text" class="form-control" id="inputTags" placeholder="Enter tags">
+    </div>
+    <button type="submit" class="btn btn-outline-light rounded-pill mt-3 btn-red">Ask</button>
+</form>
+{% endblock %}

@@ -1,0 +1,30 @@
+<div class="pagination col-10">
+    <span class="step-links mx-auto">
+    {% load static %}
+        {% if questions.has_previous %}
+            {% if questions.previous_page_number != 1 %}
+                <a class="page_number" href="?page=1">
+                <img src="{% static "images/left-arrow.svg" %}" alt="" height="13">
+            </a>
+            {% endif %}
+
+            <a class="page_number"
+               href="?page={{ questions.previous_page_number }}"><u>{{ questions.previous_page_number }}</u></a>
+        {% endif %}
+
+        <span class="page_number">
+            {{ questions.number }}
+        </span>
+
+        {% if questions.has_next %}
+            <a class="page_number"
+               href="?page={{ questions.next_page_number }}"><u>{{ questions.next_page_number }}</u></a>
+
+            {% if questions.next_page_number != questions.paginator.num_pages %}
+                <a class="page_number" href="?page={{ questions.paginator.num_pages }}">
+                <img src="{% static "images/right-arrow.svg" %}" alt="" height="13">
+            </a>
+            {% endif %}
+        {% endif %}
+    </span>
+</div>

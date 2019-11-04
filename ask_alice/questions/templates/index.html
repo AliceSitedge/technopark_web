@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block questions %}
+    <a class="header-font"><h2>New questions</h2></a>
+    <a class="text-dark" href="{% url 'hot_questions' %}"><u>Hot questions</u></a>
+{% endblock %}
+
+{% block body %}
+    {% for question in questions %}
+        <div class="card mb-5 col-10">
+            <div class="row">
+                <div class="col-2">
+                    {% load static %}
+                    <img src="{% static "images/avatar.jpg" %}" alt="" height="60" class="mx-auto d-block my-3">
+                    <button class="btn mx-auto d-block p-0">
+                        <img src="{% static "images/chevron-top.svg" %}" alt="" height="15">
+                    </button>
+                    <div class="text-center">0</div>
+                    <button class="btn mx-auto d-block p-0">
+                        <img src="{% static "images/chevron-bottom.svg" %}" alt="" height="15">
+                    </button>
+                </div>
+
+                <div class="col-10">
+                    <h3 class="card-title my-3">
+                        <a class="text-dark header-font"
+                           href="{% url 'question' question.id %}"><u>{{ question.title }}</u></a>
+                    </h3>
+
+                    <div class="text-font">
+                        {{ question.text }}
+                    </div>
+                    <div class="my-4">
+                        <a class="text-dark"
+                           href="{% url 'question' question.id %}#inputText"><u>answer({{ question.answers }})</u></a>
+                        <span class="ml-3 mr-2"> Tags:
+                        </span>
+                        {% for tag in question.tags %}
+                            <a class="text-dark" href="{% url 'tag' tag %}"><u>{{ tag }}</u></a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+    {% include 'pagination.html' %}
+{% endblock %}

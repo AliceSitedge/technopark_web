@@ -1,0 +1,128 @@
+@font-face {
+    font-family: 'Montserrat-Medium';
+    src: url('fonts/Montserrat-Medium.ttf')
+}
+
+@font-face {
+    font-family: 'Montserrat-Light';
+    src: url('fonts/Montserrat-Light.ttf')
+}
+
+body {
+    min-height: 100vh;
+    font-family: 'Montserrat', sans-serif;
+}
+
+a u {
+    font-family: 'Montserrat-Light', sans-serif;
+}
+
+.form-group {
+    margin-bottom: 2rem;
+}
+
+.text-area {
+    min-height: 200px;
+}
+
+.nav-item .settings {
+    margin-left: -9px;
+    margin-top: -13px;
+    margin-right: 5px;
+
+}
+
+.navbar-brand {
+    font-size: xx-large;
+    font-family: 'Baloo Bhai', sans-serif;
+    color: black!important;
+}
+
+.header-font {
+    font-family: 'Quicksand', sans-serif;
+}
+
+.text-font{
+    font-family: 'Montserrat', sans-serif;
+}
+
+.font-medium {
+    font-family: 'Montserrat-Medium', sans-serif;
+}
+
+.font-light {
+    font-family: 'Montserrat-Light', sans-serif;
+}
+
+.right-round {
+    border-bottom-right-radius: 20rem;
+    border-top-right-radius: 20rem;
+}
+
+.left-round {
+    border-bottom-left-radius: 20rem;
+    border-top-left-radius: 20rem;
+}
+
+.form-control:focus {
+    /*outline: 0!important;*/
+    box-shadow: none;
+    border-color: lightgrey;
+}
+
+.btn:focus {
+    /*outline: 0!important;*/
+    box-shadow: none;
+    /*border-color: none;*/
+}
+
+.custom-file-label:focus {
+    /*outline: 0!important;*/
+    box-shadow: none;
+    /*border-color: lightgrey;*/
+}
+
+.custom-file-input:focus {
+    /*outline: 0!important;*/
+    box-shadow: none;
+    /*border-color: lightgrey;*/
+}
+
+.btn-red {
+    /*color: #CD6155;*/
+    /*border-color: #CD6155;*/
+    background-color: #CD6155;
+    height: 45px;
+    width: 120px;
+}
+
+/*.btn:hover {*/
+/*    background-color: #C0392B;*/
+/*}*/
+
+.pink {
+    background-color: #F2D7D5;
+}
+
+.bottom-indent {
+    margin-bottom: 30px;
+}
+
+.flex-row {
+  flex: 1 0 auto;
+}
+
+.no-border {
+    border: none;
+}
+
+.page_number {
+    margin-left: 5px;
+    margin-right: 5px;
+    color: #343a40;
+    font-size: 18px;
+}
+
+.step-links {
+    margin-top: -20px;
+}
