@@ -6,6 +6,12 @@ popular_tags = ['python', 'MySQL', 'django', 'mail.ru', 'technopark', 'yandex.ru
 best_members = ['AliceSitedge', 'AntonyMo', 'LenkaDEA', 'aria_ramm', 'lavender_from_the_valley']
 
 
+def paginate(data, request, number_on_page):
+    paginator = Paginator(data, number_on_page)
+    page = request.GET.get('page')
+    return paginator.get_page(page)
+
+
 def index(request):
     template = loader.get_template('index.html')
     questions = []
@@ -19,9 +25,7 @@ def index(request):
             'tags': ['black-jack', 'bender']
         })
 
-    paginator = Paginator(questions, 5)
-    page = request.GET.get('page')
-    questions_on_page = paginator.get_page(page)
+    questions_on_page = paginate(questions, request, 5)
     context = {
         'popular_tags': popular_tags,
         'best_members': best_members,
@@ -52,6 +56,7 @@ def question(request, question_id):
                     'sollicitudin tempor id. A lacus vestibulum sed arcu non odio euismod lacinia.',
             'is_correct': True
         })
+
     context = {
         'popular_tags': popular_tags,
         'best_members': best_members,
@@ -65,7 +70,8 @@ def question(request, question_id):
 def ask(request):
     template = loader.get_template('ask.html')
     context = {
-        # 'latest_question_list': latest_question_list,
+        'popular_tags': popular_tags,
+        'best_members': best_members,
     }
     return HttpResponse(template.render(context, request))
 
@@ -83,9 +89,7 @@ def tag(request, tag_name):
             'tags': ['black-jack', 'bender']
         })
 
-    paginator = Paginator(questions, 5)
-    page = request.GET.get('page')
-    questions_on_page = paginator.get_page(page)
+    questions_on_page = paginate(questions, request, 5)
     context = {
         'popular_tags': popular_tags,
         'best_members': best_members,
@@ -136,9 +140,7 @@ def hot(request):
             'tags': ['black-jack', 'bender']
         })
 
-    paginator = Paginator(questions, 5)
-    page = request.GET.get('page')
-    questions_on_page = paginator.get_page(page)
+    questions_on_page = paginate(questions, request, 5)
     context = {
         'popular_tags': popular_tags,
         'best_members': best_members,
