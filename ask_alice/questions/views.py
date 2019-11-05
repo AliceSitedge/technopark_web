@@ -26,7 +26,9 @@ def index(request):
         })
 
     questions_on_page = paginate(questions, request, 5)
+    print(request.user)
     context = {
+        'user': request.user,
         'popular_tags': popular_tags,
         'best_members': best_members,
         'questions': questions_on_page
@@ -58,6 +60,7 @@ def question(request, question_id):
         })
 
     context = {
+        'user': request.user,
         'popular_tags': popular_tags,
         'best_members': best_members,
         'question_id': question_id,
@@ -70,6 +73,7 @@ def question(request, question_id):
 def ask(request):
     template = loader.get_template('ask.html')
     context = {
+        'user': request.user,
         'popular_tags': popular_tags,
         'best_members': best_members,
     }
@@ -91,6 +95,7 @@ def tag(request, tag_name):
 
     questions_on_page = paginate(questions, request, 5)
     context = {
+        'user': request.user,
         'popular_tags': popular_tags,
         'best_members': best_members,
         'tag_name': tag_name,
@@ -102,6 +107,7 @@ def tag(request, tag_name):
 def settings(request):
     template = loader.get_template('settings.html')
     context = {
+        'user': request.user,
         'popular_tags': popular_tags,
         'best_members': best_members,
         'nickname': 'AliceSitedge', 'login': 'alice_sitedge', 'email': 'a.seledkina@mail.ru'
@@ -112,6 +118,7 @@ def settings(request):
 def signin(request):
     template = loader.get_template('signin.html')
     context = {
+        'user': request.user,
         'popular_tags': popular_tags,
         'best_members': best_members,
     }
@@ -121,6 +128,7 @@ def signin(request):
 def signup(request):
     template = loader.get_template('signup.html')
     context = {
+        'user': request.user,
         'popular_tags': popular_tags,
         'best_members': best_members,
     }
@@ -142,6 +150,7 @@ def hot(request):
 
     questions_on_page = paginate(questions, request, 5)
     context = {
+        'user': request.user,
         'popular_tags': popular_tags,
         'best_members': best_members,
         'questions': questions_on_page

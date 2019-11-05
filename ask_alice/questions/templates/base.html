@@ -48,25 +48,7 @@
     </form>
     <div class="navbar-nav col-lg-2 col-1"></div>
     <div class="container justify-content-lg-center justify-content-end col-lg-3 col-4 mr-0">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <img src="{% static "images/avatar.jpg" %}" height="60" alt="">
-            </li>
-            <li class="nav-item">
-                <div class="container">
-                    <p class="text-dark text-font font-medium">AliceSitedge</p>
-                    <ul class="navbar-nav text-font font-light settings">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark ml-0" href="{% url 'settings' %}"><u>settings</u></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="#"><u>sign out</u></a>
-                        </li>
-                    </ul>
-                </div>
-
-            </li>
-        </ul>
+        {% include 'user_block.html' %}
     </div>
 </nav>
 

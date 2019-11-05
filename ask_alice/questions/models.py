@@ -6,7 +6,7 @@ from django.utils import timezone
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     nickname = models.CharField(max_length=200)
-    avatar = models.ImageField()
+    avatar = models.ImageField(default='/static/images/avatar.jpg')
 
     def __str__(self):
         return self.nickname
@@ -33,6 +33,7 @@ class Question(models.Model):
 
 class Answer(models.Model):
     author = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True)
     text = models.CharField(max_length=500)
     rating = models.IntegerField(default=0)
     datetime = models.DateTimeField(default=timezone.now)
