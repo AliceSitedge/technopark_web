@@ -35,14 +35,14 @@ a u {
 .navbar-brand {
     font-size: xx-large;
     font-family: 'Baloo Bhai', sans-serif;
-    color: black!important;
+    color: black !important;
 }
 
 .header-font {
     font-family: 'Quicksand', sans-serif;
 }
 
-.text-font{
+.text-font {
     font-family: 'Montserrat', sans-serif;
 }
 
@@ -92,8 +92,11 @@ a u {
     /*color: #CD6155;*/
     /*border-color: #CD6155;*/
     background-color: #CD6155;
-    height: 45px;
     width: 120px;
+}
+
+.btn-height {
+    height: 45px;
 }
 
 /*.btn:hover {*/
@@ -109,7 +112,7 @@ a u {
 }
 
 .flex-row {
-  flex: 1 0 auto;
+    flex: 1 0 auto;
 }
 
 .no-border {

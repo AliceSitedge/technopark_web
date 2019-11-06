@@ -29,8 +29,8 @@
 <body class="d-flex flex-column">
 <nav class="navbar navbar-expand sticky-top bg-light navbar-light text-light">
     <a class="navbar-brand brand-font text-dark text-left col-2" href="{% url 'index' %}">AskAlice</a>
-    <form class="form-inline text-font justify-content-start col-5">
-        <div class="input-group mr-2 col-10" style="padding-left: 5px;">
+    <form class="form-inline text-font justify-content-start col-6">
+        <div class="input-group mr-2 col-8" style="padding-left: 5px;">
             <div class="input-group-prepend">
                 <span class="input-group-text border-right-0 bg-white left-round" id="basic-addon1">
                     <svg xmlns="http://www.w3.org/2000/svg" class="search-panel-query-icon" width="22px" height="22px"
@@ -44,9 +44,11 @@
                    aria-label="Search"
                    aria-describedly="basic-addon1">
         </div>
+        <div class="col-2">
+            <a type="submit" class="btn btn-outline-light rounded-pill btn-red" href="{% url 'ask' %}" role="button">Ask</a>
+        </div>
 
     </form>
-    <div class="navbar-nav col-lg-2 col-1"></div>
     <div class="container justify-content-lg-center justify-content-end col-lg-3 col-4 mr-0">
         {% include 'user_block.html' %}
     </div>
@@ -71,13 +73,13 @@
         <h2 class="header-font bottom-indent">| Popular tags</h2>
         <div class="col-10">
             {% for tag in popular_tags %}
-                <a class="text-dark mr-3" href="{% url 'tag' tag %}"><u>{{ tag }}</u></a>
+                <a class="text-dark mr-3" href="{% url 'tag' tag.name %}"><u>{{ tag.name }}</u></a>
             {% endfor %}
         </div>
 
         <h2 class="header-font bottom-indent mt-4">| Best members</h2>
         {% for member in best_members %}
-            <p class="text-font ml-3">{{ member }}</p>
+            <p class="text-font ml-3">{{ member.nickname }}</p>
         {% endfor %}
     </div>
 </div>
