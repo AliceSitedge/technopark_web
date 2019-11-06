@@ -1,10 +1,13 @@
 from django.http import HttpResponse
 from django.template import loader
 from django.core.paginator import Paginator
-from .models import Question, Answer
+from django.db.models import Count
 
-popular_tags = ['python', 'MySQL', 'django', 'mail.ru', 'technopark', 'yandex.ru']
-best_members = ['AliceSitedge', 'AntonyMo', 'LenkaDEA', 'aria_ramm', 'lavender_from_the_valley']
+
+from .models import Profile, Tag, Question, Answer
+
+popular_tags = Tag.objects.annotate(questions_num=Count('question')).order_by('-questions_num')[0:5]
+best_members = Profile.objects.annotate(activity=Count('question') + Count('answer')).order_by('-activity')[0:5]
 
 
 def paginate(data, request, number_on_page):
