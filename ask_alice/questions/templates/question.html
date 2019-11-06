@@ -32,8 +32,8 @@
                 <div class="my-4">
                         <span class="mr-2"> Tags:
                         </span>
-                    {% for tag in question.tags %}
-                        <a class="text-dark" href="{% url 'tag' tag %}"><u>{{ tag }}</u></a>
+                    {% for tag in question.tags.all %}
+                        <a class="text-dark" href="{% url 'tag' tag %}"><u>{{ tag.name }}</u></a>
                     {% endfor %}
                 </div>
             </div>

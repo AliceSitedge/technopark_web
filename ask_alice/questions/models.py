@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 
+from .managers import QuestionManager, AnswerManager, LikeDislikeManager
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -27,6 +29,8 @@ class Question(models.Model):
     rating = models.IntegerField(default=0)
     datetime = models.DateTimeField(default=timezone.now)
 
+    object = QuestionManager()
+
     def __str__(self):
         return self.title
 
@@ -38,6 +42,8 @@ class Answer(models.Model):
     rating = models.IntegerField(default=0)
     datetime = models.DateTimeField(default=timezone.now)
     correct = models.BooleanField(default=False)
+
+    object = AnswerManager()
 
     def __str__(self):
         return self.text
@@ -56,3 +62,5 @@ class LikeDislike(models.Model):
     user = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True)
     question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True)
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE, null=True)
+
+    # object = LikeDislikeManager()
