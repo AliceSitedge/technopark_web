@@ -23,4 +23,8 @@ class AnswerManager(models.Manager):
 
 
 class LikeDislikeManager(models.Manager):
-    pass
+    def get_likes(self):
+        return self.model.object.filter(vote='Like')
+
+    def get_dislikes(self):
+        return self.model.object.filter(vote='Dislike')

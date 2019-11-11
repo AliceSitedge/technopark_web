@@ -1,8 +1,9 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
-import random
+from random import randint
+from random import choice
 
-from questions.models import Profile, Tag, Question, Answer
+from questions.models import Profile, Tag, Question, Answer, LikeDislike
 
 
 class Command(BaseCommand):
@@ -74,7 +75,7 @@ class Command(BaseCommand):
                             ['For example https://neerc.ifmo.ru/wiki/index.php']]
 
         for i in range(len(question_titles)):
-            q = Question(author=Profile.objects.get(id=random.randint(1, 5)),
+            q = Question(author=Profile.objects.get(id=randint(1, Profile.objects.count())),
                          title=question_titles[i],
                          text=question_texts[i])
             q.save()
@@ -82,22 +83,24 @@ class Command(BaseCommand):
                 q.tags.add(Tag.objects.get(name=tag_name))
             q.save()
             for text in question_answers[i]:
-                ans = Answer(author=Profile.objects.get(id=random.randint(1, 5)),
+                ans = Answer(author=Profile.objects.get(id=randint(1, Profile.objects.count())),
                              question=q,
                              text=text)
                 ans.save()
 
     @staticmethod
-    def generate_likes():
-        pass
-
-    @staticmethod
-    def generate_dislikes():
-        pass
+    def generate_votes(object_type, num):
+        for _ in range(num):
+            vote = LikeDislike(vote=choice((1, -1)),
+                               author=Profile.objects.get(id=randint(1, Profile.objects.count())),
+                               content_object=object_type.object.get(id=randint(1, object_type.object.count())))
+            vote.content_object.rating += vote.vote
+            vote.content_object.save()
+            vote.save()
 
     def handle(self, *args, **options):
         self.generate_profiles()
         self.generate_tags()
         self.generate_questions_answers()
-        self.generate_likes()
-        self.generate_dislikes()
+        self.generate_votes(Question, 100)
+        self.generate_votes(Answer, 100)
