@@ -52,12 +52,9 @@ class Answer(models.Model):
 
 
 class LikeDislike(models.Model):
-    LIKE = 1
-    DISLIKE = -1
-
     VOTES = (
-        (LIKE, 'Like'),
-        (DISLIKE, 'Dislike')
+        (1, 'Like'),
+        (-1, 'Dislike')
     )
 
     vote = models.IntegerField(choices=VOTES)

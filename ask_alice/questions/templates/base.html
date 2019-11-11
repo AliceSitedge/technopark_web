@@ -45,7 +45,9 @@
                    aria-describedly="basic-addon1">
         </div>
         <div class="col-2">
-            <a href="{% url 'ask' %}"><button class="btn btn-outline-light rounded-pill btn-red">Ask</button></a>
+            <form>
+                <button class="btn btn-outline-light rounded-pill btn-red" formaction="{% url 'ask' %}">Ask</button>
+            </form>
         </div>
 
     </form>
