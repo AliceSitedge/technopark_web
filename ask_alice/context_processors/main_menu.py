@@ -7,8 +7,9 @@ best_members = Profile.objects.annotate(activity=Count('question') + Count('answ
 
 
 def menu(request):
+    profile = Profile.objects.get(id=request.user.id)
     return {
-        'user': request.user,
+        'profile': profile,
         'popular_tags': popular_tags,
         'best_members': best_members
     }

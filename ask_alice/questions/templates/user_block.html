@@ -1,12 +1,12 @@
-{% if user.is_authenticated %}
+{% if profile.user.is_authenticated %}
     <ul class="navbar-nav">
         <li class="nav-item">
             {% load static %}
-            <img src="{% static "images/avatar.jpg" %}" height="60" alt="">
+            <img src="{{ profile.avatar }}" height="60" alt="">
         </li>
         <li class="nav-item">
             <div class="container">
-                <p class="text-dark text-font font-medium">AliceSitedge</p>
+                <p class="text-dark text-font font-medium">{{ profile.nickname }}</p>
                 <ul class="navbar-nav text-font font-light settings">
                     <li class="nav-item">
                         <a class="nav-link text-dark ml-0" href="{% url 'settings' %}"><u>settings</u></a>

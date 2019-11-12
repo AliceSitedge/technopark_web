@@ -58,11 +58,7 @@ def tag(request, tag_name):
 
 def settings(request):
     template = loader.get_template('settings.html')
-    context = {
-        'nickname': 'AliceSitedge',
-        'login': 'alice_sitedge',
-        'email': 'a.seledkina@mail.ru'
-    }
+    context = {}
     return HttpResponse(template.render(context, request))
 
 

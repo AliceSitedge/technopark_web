@@ -9,28 +9,28 @@
         <div class="form-group row">
             <label for="input_log" class="col-2 col-form-label">Login</label>
             <div class="col-5">
-                <input type="text" class="form-control" id="input_log" value= {{ login }}>
+                <input type="text" class="form-control" id="input_log" value= {{ profile.user.username }}>
             </div>
         </div>
 
         <div class="form-group row">
             <label for="input_email" class="col-2 col-form-label">Email</label>
             <div class="col-5">
-                <input type="email" class="form-control" id="input_email" value= {{ email }}>
+                <input type="email" class="form-control" id="input_email" value= {{ profile.user.email }}>
             </div>
         </div>
 
         <div class="form-group row">
             <label for="input_nickname" class="col-2 col-form-label">Nickname</label>
             <div class="col-5">
-                <input type="text" class="form-control" id="input_nickname" value= {{ nickname }}>
+                <input type="text" class="form-control" id="input_nickname" value= {{ profile.nickname }}>
             </div>
         </div>
 
         <div class="form-group row">
             <label for="upload_avatar" class="col-2 col-form-label">Upload avatar</label>
             {% load static %}
-            <img src="{% static "images/avatar.jpg" %}" class="col-3" alt="">
+            <img src="{{ profile.avatar }}" class="col-3" alt="">
         </div>
 
         <div class="form-group row">
