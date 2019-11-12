@@ -44,5 +44,7 @@
         </div>
     {% endfor %}
 
-    {% include 'pagination.html' %}
+    {% with objects=questions %}
+        {% include 'pagination.html' %}
+    {% endwith %}
 {% endblock %}

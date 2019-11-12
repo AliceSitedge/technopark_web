@@ -46,6 +46,10 @@
         {% include 'show_answer.html' %}
     {% endfor %}
 
+    {% with objects=answers %}
+        {% include 'pagination.html' %}
+    {% endwith %}
+
     <hr>
 
     <div class="form-group col-10 px-0">

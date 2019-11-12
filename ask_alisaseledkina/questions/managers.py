@@ -8,7 +8,7 @@ class QuestionManager(models.Manager):
         return self.annotate(answers_num=Count('answer')).order_by('-datetime')
 
     def get_hot(self):
-        return self.annotate(answers_num=Count('answer')).order_by('-answers_num')
+        return self.model.object.order_by('-rating')
 
     def get_tag(self, tag_name):
         return get_list_or_404(self.annotate(answers_num=Count('answer')).filter(tags__name=tag_name))

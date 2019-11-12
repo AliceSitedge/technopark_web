@@ -1,6 +1,5 @@
-from django.http import HttpResponse
-from django.template import loader
 from django.core.paginator import Paginator
+from django.shortcuts import render
 
 
 from .models import Question, Answer
@@ -13,39 +12,33 @@ def paginate(data, request, number_on_page):
 
 
 def index(request):
-    template = loader.get_template('index.html')
-
     questions = Question.object.get_fresh()
     questions_on_page = paginate(questions, request, 5)
 
     context = {
         'questions': questions_on_page
     }
-    return HttpResponse(template.render(context, request))
+    return render(request, 'index.html', context)
 
 
 def question(request, question_id):
-    template = loader.get_template('question.html')
-
     question = Question.object.get_question(question_id)
     answers = Answer.object.get_question(question_id)
+    answers_on_page = paginate(answers, request, 3)
 
     context = {
         'question': question,
-        'answers': answers
+        'answers': answers_on_page
     }
-    return HttpResponse(template.render(context, request))
+    return render(request, 'question.html', context)
 
 
 def ask(request):
-    template = loader.get_template('ask.html')
     context = {}
-    return HttpResponse(template.render(context, request))
+    return render(request, 'ask.html', context)
 
 
 def tag(request, tag_name):
-    template = loader.get_template('tag.html')
-
     questions = Question.object.get_tag(tag_name)
     questions_on_page = paginate(questions, request, 5)
 
@@ -53,34 +46,29 @@ def tag(request, tag_name):
         'tag_name': tag_name,
         'questions': questions_on_page
     }
-    return HttpResponse(template.render(context, request))
+    return render(request, 'tag.html', context)
 
 
 def settings(request):
-    template = loader.get_template('settings.html')
     context = {}
-    return HttpResponse(template.render(context, request))
+    return render(request, 'settings.html', context)
 
 
 def signin(request):
-    template = loader.get_template('signin.html')
     context = {}
-    return HttpResponse(template.render(context, request))
+    return render(request, 'signin.html', context)
 
 
 def signup(request):
-    template = loader.get_template('signup.html')
     context = {}
-    return HttpResponse(template.render(context, request))
+    return render(request, 'signup.html', context)
 
 
 def hot(request):
-    template = loader.get_template('hot_questions.html')
-
     questions = Question.object.get_hot()
     questions_on_page = paginate(questions, request, 5)
 
     context = {
         'questions': questions_on_page
     }
-    return HttpResponse(template.render(context, request))
+    return render(request, 'hot_questions.html', context)
