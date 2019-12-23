@@ -1,5 +1,7 @@
 from django.core.paginator import Paginator
-from django.shortcuts import render
+from django.shortcuts import render, redirect, reverse
+from django.contrib import auth
+from django.contrib.auth.decorators import login_required
 
 
 from .models import Question, Answer
@@ -33,6 +35,7 @@ def question(request, question_id):
     return render(request, 'question.html', context)
 
 
+@login_required
 def ask(request):
     context = {}
     return render(request, 'ask.html', context)
@@ -49,12 +52,22 @@ def tag(request, tag_name):
     return render(request, 'tag.html', context)
 
 
+@login_required
 def settings(request):
     context = {}
     return render(request, 'settings.html', context)
 
 
 def signin(request):
+    if request.POST:
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = auth.authenticate(
+            username=username, password=password)
+        if user is not None:
+            auth.login(request, user)
+            next_to = request.POST.get('next', 'index')
+            return redirect(next_to)
     context = {}
     return render(request, 'signin.html', context)
 
@@ -62,6 +75,11 @@ def signin(request):
 def signup(request):
     context = {}
     return render(request, 'signup.html', context)
+
+
+def signout(request):
+    auth.logout(request)
+    return redirect(reverse("index"))
 
 
 def hot(request):

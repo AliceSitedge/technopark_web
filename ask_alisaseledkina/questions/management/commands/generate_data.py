@@ -11,7 +11,7 @@ class Command(BaseCommand):
     def generate_profiles():
         user_names = ['AliceSitedge', 'AntonyMo', 'LenkaDEA', 'aria_ramm', 'lavender_from_the_valley']
         for name in user_names:
-            Profile.objects.create(user=User.objects.create(username=name, password=name),
+            Profile.objects.create(user=User.objects.create_user(username=name, password='myawesamepass'),
                                    nickname=name,
                                    avatar='/static/images/avatars/' + name + '.png')
 

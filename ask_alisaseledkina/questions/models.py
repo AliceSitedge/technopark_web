@@ -3,12 +3,13 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.conf import settings
 
 from .managers import QuestionManager, AnswerManager, LikeDislikeManager
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     nickname = models.CharField(max_length=200)
     avatar = models.ImageField(default='/static/images/avatar.jpg')
 

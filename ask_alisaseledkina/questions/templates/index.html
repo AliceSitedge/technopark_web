@@ -31,9 +31,15 @@
                         {{ question.text }}
                     </div>
                     <div class="my-4">
-                        <a class="text-dark"
-                           href="{% url 'question' question.id %}#inputText"><u>answer({{ question.answers_num }})</u></a>
-                        <span class="ml-3 mr-2"> Tags:
+                        {% if user.is_authenticated %}
+                            <span class="mr-3">
+                            <a class="text-dark" href="{% url 'question' question.id %}#inputText">
+                                <u>answer({{ question.answers_num }})</u>
+                            </a>
+                            </span>
+                        {% endif %}
+
+                        <span class="mr-2"> Tags:
                         </span>
                         {% for tag in question.tags.all %}
                             <a class="text-dark" href="{% url 'tag' tag %}"><u>{{ tag.name }}</u></a>
