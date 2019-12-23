@@ -27,7 +27,7 @@ class Tag(models.Model):
 class Question(models.Model):
     author = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=200)
-    text = models.CharField(max_length=500)
+    text = models.CharField(max_length=500, null=False)
     tags = models.ManyToManyField(Tag, blank=True)
     rating = models.IntegerField(default=0)
     datetime = models.DateTimeField(default=timezone.now)

@@ -2,6 +2,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, reverse
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+from questions.forms import AskForm
 
 
 from .models import Question, Answer
@@ -37,7 +38,21 @@ def question(request, question_id):
 
 @login_required
 def ask(request):
-    context = {}
+    if request.POST:
+        form = AskForm(
+            request.user.profile, data=request.POST)
+        if form.is_valid():
+            question = form.save()
+            return redirect(
+                reverse(
+                    'question', kwargs={'question_id': question.pk}))
+        print(form.errors)
+    else:
+        form = AskForm(request.user.profile)
+
+    context = {
+        'form': form
+    }
     return render(request, 'ask.html', context)
 
 
@@ -79,7 +94,7 @@ def signup(request):
 
 def signout(request):
     auth.logout(request)
-    return redirect(reverse("index"))
+    return redirect(reverse('index'))
 
 
 def hot(request):
