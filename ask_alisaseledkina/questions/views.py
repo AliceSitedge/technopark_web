@@ -2,10 +2,9 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, reverse
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
-from questions.forms import QuestionForm, ProfileForm
+from questions.forms import AskForm, SignupForm, SettingsForm, AnswerForm
 
-
-from .models import Question, Answer, Profile
+from .models import Question, Answer
 
 
 def paginate(data, request, number_on_page):
@@ -29,9 +28,18 @@ def question(request, question_id):
     answers = Answer.object.get_question(question_id)
     answers_on_page = paginate(answers, request, 3)
 
+    if request.POST:
+        form = AnswerForm(request.user.profile, question, data=request.POST)
+        if form.is_valid():
+            answer = form.save()
+            return redirect(reverse('question', kwargs={'question_id': question.pk}))
+    else:
+        form = AnswerForm(request.user.profile, question)
+
     context = {
         'question': question,
-        'answers': answers_on_page
+        'answers': answers_on_page,
+        'form': form
     }
     return render(request, 'question.html', context)
 
@@ -39,13 +47,12 @@ def question(request, question_id):
 @login_required
 def ask(request):
     if request.POST:
-        form = QuestionForm(request.user.profile, data=request.POST)
+        form = AskForm(request.user.profile, data=request.POST)
         if form.is_valid():
             question = form.save()
             return redirect(reverse('question', kwargs={'question_id': question.pk}))
-        print(form.errors)
     else:
-        form = QuestionForm(request.user.profile)
+        form = AskForm(request.user.profile)
 
     context = {
         'form': form
@@ -66,7 +73,20 @@ def tag(request, tag_name):
 
 @login_required
 def settings(request):
-    context = {}
+    if request.POST:
+        form = SettingsForm(request.user.profile, data=request.POST, files=request.FILES)
+        if form.is_valid():
+            profile = form.save()
+            next_to = request.POST.get('next', 'settings')
+            return redirect(next_to)
+    else:
+        form = SettingsForm(request.user.profile,
+                            initial={'username': request.user.username, 'email': request.user.email,
+                                     'nickname': request.user.profile.nickname, 'avatar': request.user.profile.avatar})
+
+    context = {
+        'form': form
+    }
     return render(request, 'settings.html', context)
 
 
@@ -86,15 +106,14 @@ def signin(request):
 
 def signup(request):
     if request.POST:
-        form = ProfileForm(data=request.POST, files=request.FILES)
+        form = SignupForm(data=request.POST, files=request.FILES)
         if form.is_valid():
             profile = form.save()
             auth.login(request, profile.user)
             next_to = request.POST.get('next', 'index')
             return redirect(next_to)
-        print(form.errors)
     else:
-        form = ProfileForm()
+        form = SignupForm()
 
     context = {
         'form': form

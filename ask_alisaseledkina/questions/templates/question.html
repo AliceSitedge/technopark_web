@@ -53,11 +53,12 @@
     <hr>
 
     {% if user.is_authenticated %}
-        <div class="form-group col-10 px-0">
-            <textarea class="form-control text-area" id="inputText" placeholder="Enter your answer"></textarea>
-        </div>
+        <form method="POST">
+            {% csrf_token %}
 
-        <button type="submit" class="btn btn-outline-light rounded-pill btn-red btn-height">Answer</button>
+            {% include 'render_form.html' %}
+
+            <button type="submit" class="btn btn-outline-light rounded-pill btn-red btn-height">Answer</button>
+        </form>
     {% endif %}
-
 {% endblock %}

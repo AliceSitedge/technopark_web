@@ -1,9 +1,9 @@
 from django import forms
-from questions.models import Question, Tag, Profile
+from questions.models import Question, Tag, Profile, Answer
 from django.contrib.auth.models import User
 
 
-class QuestionForm(forms.ModelForm):
+class AskForm(forms.ModelForm):
     tags = forms.CharField(required=False, max_length=200,
                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter tags'}))
 
@@ -41,7 +41,7 @@ class QuestionForm(forms.ModelForm):
         return obj
 
 
-class ProfileForm(forms.ModelForm):
+class SignupForm(forms.ModelForm):
     username = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control'}))
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
@@ -53,7 +53,7 @@ class ProfileForm(forms.ModelForm):
 
         widgets = {
             'nickname': forms.TextInput(attrs={'class': 'form-control'}),
-            'avatar': forms.FileInput(attrs={'class': 'form-control-file'})
+            'avatar': forms.FileInput(attrs={'class': 'form-control-file'}),
         }
 
     field_order = [
@@ -96,3 +96,71 @@ class ProfileForm(forms.ModelForm):
         if User.objects.filter(username=username).exists():
             self.add_error('username', 'User with such name already exists.')
         return username
+
+
+class SettingsForm(forms.ModelForm):
+    username = forms.CharField(max_length=200, widget=forms.TextInput(
+        attrs={'class': 'form-control'}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = Profile
+        fields = ['nickname', 'avatar']
+
+        widgets = {
+            'nickname': forms.TextInput(attrs={'class': 'form-control'}),
+            'avatar': forms.FileInput(attrs={'class': 'form-control-file'})
+        }
+
+    field_order = [
+        'username',
+        'email',
+        'nickname',
+        'avatar'
+    ]
+
+    def __init__(self, profile, *args, **kwargs):
+        self.profile = profile
+
+        super().__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        profile = self.profile
+        profile.user.username = self.cleaned_data['username']
+        profile.user.email = self.cleaned_data['email']
+        profile.user.save()
+        profile.nickname = self.cleaned_data['nickname']
+        profile.avatar = self.cleaned_data['avatar']
+        profile.save()
+
+        return profile
+
+    def clean_username(self):
+        username = self.data['username']
+        if username != self.profile.user.username and User.objects.filter(username=username).exists():
+            self.add_error('username', 'User with such name already exists.')
+        return username
+
+
+class AnswerForm(forms.ModelForm):
+    class Meta:
+        model = Answer
+        fields = ['text']
+
+        widgets = {
+            'text': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter your answer'})
+        }
+
+    def __init__(self, profile, question, *args, **kwargs):
+        self.profile = profile
+        self.question = question
+        super().__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        obj = super().save(commit=False)
+        obj.author = self.profile
+        obj.question = self.question
+        if commit:
+            obj.save()
+
+        return obj
