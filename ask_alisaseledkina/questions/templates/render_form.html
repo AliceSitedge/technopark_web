@@ -11,16 +11,36 @@
 {% for field in form.visible_fields %}
     <div class="form-group">
         {% if field.errors %}
-            {% render_field field class="form-control is-invalid" %}
-            {% for error in field.errors %}
-                <div class="invalid-feedback">
-                    {{ error }}
-                </div>
-            {% endfor %}
+            <div class="form-group row">
+                <label for="{{ field.id_for_label }}" class={{ label_class }}>{{ field.label }}</label>
+                {% if field_class %}
+                    <div class={{ field_class }}>
+                        {% render_field field class="form-control is-invalid" %}
+                        {% for error in field.errors %}
+                            <div class="invalid-feedback">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {% render_field field class="form-control is-invalid" %}
+                    {% for error in field.errors %}
+                        <div class="invalid-feedback">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
         {% else %}
-            <div class="form-group">
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {{ field }}
+            <div class="form-group row">
+                <label for="{{ field.id_for_label }}" class={{ label_class }}>{{ field.label }}</label>
+                {% if field_class %}
+                    <div class={{ field_class }}>
+                        {{ field }}
+                    </div>
+                {% else %}
+                    {{ field }}
+                {% endif %}
             </div>
         {% endif %}
     </div>

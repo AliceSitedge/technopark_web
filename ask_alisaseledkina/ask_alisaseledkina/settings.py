@@ -123,3 +123,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 LOGIN_URL = 'signin'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "questions/uploads")
+MEDIA_URL = '/uploads/'

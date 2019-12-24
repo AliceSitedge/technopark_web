@@ -1,9 +1,10 @@
 from django import forms
-from questions.models import Question, Tag
+from questions.models import Question, Tag, Profile
+from django.contrib.auth.models import User
 
 
-class AskForm(forms.ModelForm):
-    tags = forms.CharField(required=False,
+class QuestionForm(forms.ModelForm):
+    tags = forms.CharField(required=False, max_length=200,
                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter tags'}))
 
     class Meta:
@@ -39,8 +40,59 @@ class AskForm(forms.ModelForm):
 
         return obj
 
-    def clean_title(self):
-        data = self.cleaned_data['title']
-        if 'bad word' in data:
-            self.add_error('title', 'bad word detected!')
-        return data
+
+class ProfileForm(forms.ModelForm):
+    username = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    repeat_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = Profile
+        fields = ['nickname', 'avatar']
+
+        widgets = {
+            'nickname': forms.TextInput(attrs={'class': 'form-control'}),
+            'avatar': forms.FileInput(attrs={'class': 'form-control-file'})
+        }
+
+    field_order = [
+        'username',
+        'email',
+        'nickname',
+        'password',
+        'repeat_password',
+        'avatar'
+    ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        username = self.cleaned_data['username']
+        email = self.cleaned_data['email']
+        password = self.cleaned_data['password']
+        user = User.objects.create_user(username, email, password)
+        avatar = self.cleaned_data['avatar']
+        obj = super().save(commit=False)
+
+        obj.user = user
+        if commit:
+            obj.save()
+
+        return obj
+
+    def clean_password(self):
+        password = self.data['password']
+        repeat_password = self.data['repeat_password']
+
+        if password != repeat_password:
+            self.add_error('password', 'Passwords do not match.')
+            self.add_error('repeat_password', 'Passwords do not match.')
+        return password
+
+    def clean_username(self):
+        username = self.data['username']
+        if User.objects.filter(username=username).exists():
+            self.add_error('username', 'User with such name already exists.')
+        return username

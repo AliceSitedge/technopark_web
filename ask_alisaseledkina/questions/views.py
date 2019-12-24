@@ -2,10 +2,10 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, reverse
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
-from questions.forms import AskForm
+from questions.forms import QuestionForm, ProfileForm
 
 
-from .models import Question, Answer
+from .models import Question, Answer, Profile
 
 
 def paginate(data, request, number_on_page):
@@ -39,16 +39,13 @@ def question(request, question_id):
 @login_required
 def ask(request):
     if request.POST:
-        form = AskForm(
-            request.user.profile, data=request.POST)
+        form = QuestionForm(request.user.profile, data=request.POST)
         if form.is_valid():
             question = form.save()
-            return redirect(
-                reverse(
-                    'question', kwargs={'question_id': question.pk}))
+            return redirect(reverse('question', kwargs={'question_id': question.pk}))
         print(form.errors)
     else:
-        form = AskForm(request.user.profile)
+        form = QuestionForm(request.user.profile)
 
     context = {
         'form': form
@@ -88,7 +85,20 @@ def signin(request):
 
 
 def signup(request):
-    context = {}
+    if request.POST:
+        form = ProfileForm(data=request.POST, files=request.FILES)
+        if form.is_valid():
+            profile = form.save()
+            auth.login(request, profile.user)
+            next_to = request.POST.get('next', 'index')
+            return redirect(next_to)
+        print(form.errors)
+    else:
+        form = ProfileForm()
+
+    context = {
+        'form': form
+    }
     return render(request, 'signup.html', context)
 
 
