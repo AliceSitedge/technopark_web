@@ -19,7 +19,7 @@ class QuestionManager(models.Manager):
 
 class AnswerManager(models.Manager):
     def get_question(self, question_id):
-        return self.model.object.filter(question__id=question_id)
+        return self.model.object.filter(question__id=question_id).order_by('-datetime')
 
 
 class LikeDislikeManager(models.Manager):

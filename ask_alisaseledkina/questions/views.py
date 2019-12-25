@@ -2,7 +2,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, reverse
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
-from questions.forms import AskForm, SignupForm, SettingsForm, AnswerForm
+from questions.forms import AskForm, SignupForm, SettingsForm, AnswerForm, SigninForm
 
 from .models import Question, Answer
 
@@ -29,12 +29,12 @@ def question(request, question_id):
     answers_on_page = paginate(answers, request, 3)
 
     if request.POST:
-        form = AnswerForm(request.user.profile, question, data=request.POST)
+        form = AnswerForm(request.user, question, data=request.POST)
         if form.is_valid():
             answer = form.save()
             return redirect(reverse('question', kwargs={'question_id': question.pk}))
     else:
-        form = AnswerForm(request.user.profile, question)
+        form = AnswerForm(request.user, question)
 
     context = {
         'question': question,
@@ -74,7 +74,7 @@ def tag(request, tag_name):
 @login_required
 def settings(request):
     if request.POST:
-        form = SettingsForm(request.user.profile, data=request.POST, files=request.FILES)
+        form = SettingsForm(request.user.profile, data=request.POST, files=request.FILES, instance=request.user.profile)
         if form.is_valid():
             profile = form.save()
             next_to = request.POST.get('next', 'settings')
@@ -82,7 +82,8 @@ def settings(request):
     else:
         form = SettingsForm(request.user.profile,
                             initial={'username': request.user.username, 'email': request.user.email,
-                                     'nickname': request.user.profile.nickname, 'avatar': request.user.profile.avatar})
+                                     'nickname': request.user.profile.nickname, 'avatar': request.user.profile.avatar},
+                            instance=request.user.profile)
 
     context = {
         'form': form
@@ -92,15 +93,23 @@ def settings(request):
 
 def signin(request):
     if request.POST:
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = auth.authenticate(
-            username=username, password=password)
-        if user is not None:
-            auth.login(request, user)
-            next_to = request.POST.get('next', 'index')
-            return redirect(next_to)
-    context = {}
+        form = SigninForm(data=request.POST)
+        if form.is_valid():
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            user = auth.authenticate(username=username, password=password)
+            if user is not None:
+                auth.login(request, user)
+                next_to = request.GET.get('next', 'index')
+                return redirect(next_to)
+            else:
+                form.add_error(None, 'Wrong username or password.')
+    else:
+        form = SigninForm()
+
+    context = {
+        'form': form
+    }
     return render(request, 'signin.html', context)
 
 
@@ -123,7 +132,8 @@ def signup(request):
 
 def signout(request):
     auth.logout(request)
-    return redirect(reverse('index'))
+    next_to = request.GET.get('next', 'index')
+    return redirect(next_to)
 
 
 def hot(request):

@@ -11,7 +11,7 @@ from .managers import QuestionManager, AnswerManager, LikeDislikeManager
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     nickname = models.CharField(max_length=200)
-    avatar = models.ImageField(upload_to='avatar/', default='/static/images/avatar.jpg')
+    avatar = models.ImageField(upload_to='avatar/', default='default.jpg')
 
     def __str__(self):
         return self.nickname

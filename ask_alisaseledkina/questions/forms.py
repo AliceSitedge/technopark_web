@@ -1,6 +1,7 @@
 from django import forms
 from questions.models import Question, Tag, Profile, Answer
 from django.contrib.auth.models import User
+from django.contrib import auth
 
 
 class AskForm(forms.ModelForm):
@@ -82,17 +83,17 @@ class SignupForm(forms.ModelForm):
 
         return obj
 
-    def clean_password(self):
-        password = self.data['password']
-        repeat_password = self.data['repeat_password']
+    def clean(self):
+        super().clean()
+        password = self.cleaned_data['password']
+        repeat_password = self.cleaned_data['repeat_password']
 
         if password != repeat_password:
             self.add_error('password', 'Passwords do not match.')
             self.add_error('repeat_password', 'Passwords do not match.')
-        return password
 
     def clean_username(self):
-        username = self.data['username']
+        username = self.cleaned_data['username']
         if User.objects.filter(username=username).exists():
             self.add_error('username', 'User with such name already exists.')
         return username
@@ -151,16 +152,24 @@ class AnswerForm(forms.ModelForm):
             'text': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter your answer'})
         }
 
-    def __init__(self, profile, question, *args, **kwargs):
-        self.profile = profile
+    def __init__(self, user, question, *args, **kwargs):
+        self.user = user
         self.question = question
         super().__init__(*args, **kwargs)
 
     def save(self, commit=True):
         obj = super().save(commit=False)
-        obj.author = self.profile
+        obj.author = self.user.profile
         obj.question = self.question
         if commit:
             obj.save()
 
         return obj
+
+
+class SigninForm(forms.Form):
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)

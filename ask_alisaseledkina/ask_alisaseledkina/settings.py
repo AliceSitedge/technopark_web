@@ -64,7 +64,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'context_processors.main_menu.menu'
+                'context_processors.main_menu.menu',
+                'django.template.context_processors.media'
             ],
         },
     },
@@ -124,5 +125,5 @@ STATIC_URL = '/static/'
 
 LOGIN_URL = 'signin'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, "questions/uploads")
+MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")
 MEDIA_URL = '/uploads/'
