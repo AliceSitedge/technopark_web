@@ -13,7 +13,7 @@ class Command(BaseCommand):
         for name in user_names:
             Profile.objects.create(user=User.objects.create_user(username=name, password='myawesamepass'),
                                    nickname=name,
-                                   avatar='/static/images/avatars/' + name + '.png')
+                                   avatar='/avatar/' + name + '.png')
 
     @staticmethod
     def generate_tags():

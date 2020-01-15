@@ -1,7 +1,6 @@
 from django import forms
 from questions.models import Question, Tag, Profile, Answer
 from django.contrib.auth.models import User
-from django.contrib import auth
 
 
 class AskForm(forms.ModelForm):

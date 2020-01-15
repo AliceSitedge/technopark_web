@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('nickname', models.CharField(max_length=200)),
-                ('avatar', models.ImageField(default='/static/images/avatar.jpg', upload_to='')),
+                ('avatar', models.ImageField(default='/static/images/default.jpg', upload_to='')),
                 ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
