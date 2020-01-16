@@ -10,15 +10,8 @@
         <div class="card mb-5 col-10">
             <div class="row">
                 <div class="col-2">
-                    {% load static %}
                     <img src="{{ question.author.avatar.url }}" alt="" height="60" class="mx-auto d-block my-3">
-                    <button class="btn mx-auto d-block p-0">
-                        <img src="{% static "images/chevron-top.svg" %}" alt="" height="15">
-                    </button>
-                    <div class="text-center">{{ question.rating }}</div>
-                    <button class="btn mx-auto d-block p-0">
-                        <img src="{% static "images/chevron-bottom.svg" %}" alt="" height="15">
-                    </button>
+                    {% include 'show_question_rating.html' %}
                 </div>
 
                 <div class="col-10">

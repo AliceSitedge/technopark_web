@@ -1,10 +1,13 @@
+import json
+
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, reverse
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from questions.forms import AskForm, SignupForm, SettingsForm, AnswerForm, SigninForm
+from django.http import JsonResponse
 
-from .models import Question, Answer
+from .models import Question, Answer, LikeDislike
 
 
 def paginate(data, request, number_on_page):
@@ -144,3 +147,21 @@ def hot(request):
         'questions': questions_on_page
     }
     return render(request, 'hot_questions.html', context)
+
+
+@login_required
+def vote(request):
+    data = json.loads(request.body)
+
+    if data['type'] == 'question':
+        obj = Question.object.get_question(data['id'])
+    else:
+        obj = Answer.object.get(id=data['id'])
+
+    if data['vote'] == 'inc':
+        vote_value = 1
+    else:
+        vote_value = -1
+
+    made_vote = LikeDislike.object.make_vote(request.user.profile, obj, data['type'], vote_value)
+    return JsonResponse({'rating': made_vote.content_object.rating})

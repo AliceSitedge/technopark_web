@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 
@@ -24,34 +24,6 @@ class Tag(models.Model):
         return self.name
 
 
-class Question(models.Model):
-    author = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True)
-    title = models.CharField(max_length=200)
-    text = models.CharField(max_length=500, null=False)
-    tags = models.ManyToManyField(Tag, blank=True)
-    rating = models.IntegerField(default=0)
-    datetime = models.DateTimeField(default=timezone.now)
-
-    object = QuestionManager()
-
-    def __str__(self):
-        return self.title
-
-
-class Answer(models.Model):
-    author = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True)
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True)
-    text = models.CharField(max_length=500)
-    rating = models.IntegerField(default=0)
-    datetime = models.DateTimeField(default=timezone.now)
-    correct = models.BooleanField(default=False)
-
-    object = AnswerManager()
-
-    def __str__(self):
-        return self.text
-
-
 class LikeDislike(models.Model):
     VOTES = (
         (1, 'Like'),
@@ -68,3 +40,35 @@ class LikeDislike(models.Model):
 
     def __str__(self):
         return str(self.vote) + ' ' + self.content_type.name + ' ' + str(self.object_id)
+
+
+class Question(models.Model):
+    author = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True)
+    title = models.CharField(max_length=200)
+    text = models.CharField(max_length=500, null=False)
+    tags = models.ManyToManyField(Tag, blank=True)
+    rating = models.IntegerField(default=0)
+    datetime = models.DateTimeField(default=timezone.now)
+
+    object = QuestionManager()
+
+    votes = GenericRelation(LikeDislike, related_query_name='question')
+
+    def __str__(self):
+        return self.title
+
+
+class Answer(models.Model):
+    author = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True)
+    text = models.CharField(max_length=500)
+    rating = models.IntegerField(default=0)
+    datetime = models.DateTimeField(default=timezone.now)
+    correct = models.BooleanField(default=False)
+
+    object = AnswerManager()
+
+    votes = GenericRelation(LikeDislike, related_query_name='answer')
+
+    def __str__(self):
+        return self.text

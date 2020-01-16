@@ -28,3 +28,27 @@ class LikeDislikeManager(models.Manager):
 
     def get_dislikes(self):
         return self.model.object.filter(vote='Dislike')
+
+    def make_vote(self, profile, voted_object, object_type, vote_value):
+        try:
+            if object_type == 'question':
+                vote = self.model.object.get(author=profile, question=voted_object)
+            else:
+                vote = self.model.object.get(author=profile, answer=voted_object)
+        except self.model.DoesNotExist:
+            vote = self.model.object.create(vote=vote_value,
+                                            author=profile,
+                                            content_object=voted_object)
+            vote.content_object.rating += vote.vote
+            vote.content_object.save()
+            vote.save()
+            return vote
+
+        if vote.vote == vote_value:
+            return vote
+
+        vote.vote = vote_value
+        vote.content_object.rating += 2 * vote.vote
+        vote.content_object.save()
+        vote.save()
+        return vote

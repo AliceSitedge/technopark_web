@@ -89,18 +89,23 @@ class Command(BaseCommand):
                 ans.save()
 
     @staticmethod
-    def generate_votes(object_type, num):
-        for _ in range(num):
-            vote = LikeDislike(vote=choice((1, -1)),
-                               author=Profile.objects.get(id=randint(1, Profile.objects.count())),
-                               content_object=object_type.object.get(id=randint(1, object_type.object.count())))
-            vote.content_object.rating += vote.vote
-            vote.content_object.save()
-            vote.save()
+    def generate_votes(content_type):
+        profiles = list(Profile.objects.all())
+        content_type_objects = list(content_type.object.all())
+
+        for profile in profiles:
+            for obj in content_type_objects:
+                if content_type.object.get(pk=obj.id).author != profile.id:
+                    vote = LikeDislike.object.create(vote=choice((1, -1)),
+                                                     author=profile,
+                                                     content_object=obj)
+                    vote.content_object.rating += vote.vote
+                    vote.content_object.save()
+                    vote.save()
 
     def handle(self, *args, **options):
         self.generate_profiles()
         self.generate_tags()
         self.generate_questions_answers()
-        self.generate_votes(Question, 100)
-        self.generate_votes(Answer, 100)
+        self.generate_votes(Question)
+        self.generate_votes(Answer)

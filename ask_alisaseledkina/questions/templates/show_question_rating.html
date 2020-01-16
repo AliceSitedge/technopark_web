@@ -1,0 +1,14 @@
+{% if user.is_authenticated %}
+    {% load static %}
+    <button class="btn mx-auto d-block p-0 js-vote" data-qid="{{ question.id }}" data-vote="inc"
+            onclick="vote(this)">
+        <img src="{% static "images/chevron-top.svg" %}" height="15">
+    </button>
+    <div class="text-center">{{ question.rating }}</div>
+    <button class="btn mx-auto d-block p-0 js-vote" data-qid="{{ question.id }}" data-vote="dec"
+            onclick="vote(this)">
+        <img src="{% static "images/chevron-bottom.svg" %}" height="15">
+    </button>
+{% else %}
+    <div class="text-center">{{ question.rating }}</div>
+{% endif %}
