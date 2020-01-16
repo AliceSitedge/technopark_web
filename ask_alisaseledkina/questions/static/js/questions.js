@@ -37,7 +37,7 @@ function vote(element) {
             method: 'POST',
             body: JSON.stringify(data),
             credentials: 'include',
-            headers: { "X-CSRFToken": csrf_token },
+            headers: {"X-CSRFToken": csrf_token},
         }
     )
         .then(response => response.json())
@@ -46,7 +46,35 @@ function vote(element) {
             let textElement = parent.querySelector('div.text-center');
 
             textElement.textContent = responseData.rating;
-            console.log(responseData);
+        });
+
+    return false;
+}
+
+function correct(element) {
+    let answerId = element.getAttribute('data-aid');
+    let action = element.getAttribute('data-action');
+    let data = {aid: answerId, action: action};
+
+    fetch(
+        '/ask-alice/correct/', {
+            method: 'POST',
+            body: JSON.stringify(data),
+            credentials: 'include',
+            headers: {"X-CSRFToken": csrf_token},
+        }
+    )
+        .then(response => response.json())
+        .then(responseData => {
+            let parent = element.parentNode.parentNode.parentNode;
+
+            let textElement = parent.querySelector('div > .correct');
+            console.log(textElement);
+            if (responseData.correct === true) {
+                textElement.style.visibility = 'visible';
+            } else {
+                textElement.style.visibility = 'hidden';
+            }
         });
 
     return false;

@@ -14,4 +14,5 @@ urlpatterns = [
     path('signout/', views.signout, name='signout'),
     path('hot/', views.hot, name='hot_questions'),
     path('vote/', views.vote, name="vote"),
+    path('correct/', views.correct, name="correct"),
 ]

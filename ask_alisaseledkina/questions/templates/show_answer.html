@@ -18,7 +18,9 @@
             {% endif %}
 
             {% if answer.correct %}
-                <div class="text-center">Correct</div>
+                <div class="text-center correct">Correct</div>
+                {% else %}
+                <div class="text-center correct" style="visibility: hidden">Correct</div>
             {% endif %}
         </div>
 
@@ -30,9 +32,11 @@
             <div class="form-check">
                 {% if user.is_authenticated and user.profile == question.author %}
                     {% if answer.correct %}
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" checked>
+                        <input class="form-check-input js-correct" data-aid="{{ answer.id }}" data-action="unset"
+                               onclick="correct(this)" type="checkbox" value="" id="defaultCheck1" checked>
                     {% else %}
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                        <input class="form-check-input js-correct" data-aid="{{ answer.id }}" data-action="set"
+                               onclick="correct(this)" type="checkbox" value="" id="defaultCheck1">
                     {% endif %}
 
                     <label class="form-check-label" for="defaultCheck1">

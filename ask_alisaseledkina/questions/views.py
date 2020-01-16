@@ -165,3 +165,17 @@ def vote(request):
 
     made_vote = LikeDislike.object.make_vote(request.user.profile, obj, data['type'], vote_value)
     return JsonResponse({'rating': made_vote.content_object.rating})
+
+
+@login_required
+def correct(request):
+    data = json.loads(request.body)
+    answer = Answer.object.get(id=data['aid'])
+
+    if data['action'] == 'set':
+        answer.correct = True
+    else:
+        answer.correct = False
+    answer.save()
+
+    return JsonResponse({'correct': answer.correct})
